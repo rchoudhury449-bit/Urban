@@ -189,7 +189,7 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
     <div class="hc"><b data-i="h5T">Emergency numbers</b><div class="acts" style="margin-top:8px"><a href="tel:112">📞 112</a><a href="tel:108">🚑 108</a><a href="tel:100">👮 100</a><a href="tel:101">🔥 101</a></div></div>
     <div class="hc" id="hsupc"><b data-i="supT">Report a problem</b><p data-i="supP">Wrong or missing provider, or any problem with the site? Message us.</p><a class="go" id="hsup" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:var(--wa)" data-i="supB">Message on WhatsApp</a></div>
     <p class="note"><a href="privacy.html" data-i="priv" style="color:var(--lk)">Privacy &amp; consent</a> · <a href="terms.html" data-i="tms" style="color:var(--lk)">Terms</a> · <a href="refund.html" data-i="rfn" style="color:var(--lk)">Refund policy</a> · <a href="contact.html" data-i="cnt" style="color:var(--lk)">Contact</a></p>
-    <p class="note" style="margin-top:0">App version 7</p>
+    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 9</p>
   </div>
 </div>
 
@@ -443,48 +443,67 @@ addEventListener("touchend",function(e){
   if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.7||Date.now()-st>700)return;
   swipeTo(dx<0?1:-1);
 },{passive:true});
-/* ===== Back button =====
-   History is kept as a tiny stack:  [base] [home] [any other page]
-   - Back on any other page  -> Home
-   - Back on Home            -> "Press back again to exit" (second back within 2 seconds leaves the app)
-   Entries are only added after a real tap, because Chrome ignores entries made without one. */
-var armed=false,armT=null,guarded=false;
-var HOME_ST={mh:"app",l:0};
-function pushHome(){try{history.pushState(HOME_ST,"")}catch(e){}}
-function pushPage(v){try{history.pushState({mh:"app",l:1,v:v},"")}catch(e){}}
-function guard(){
-  if(guarded)return;guarded=true;
-  try{history.replaceState({mh:"base"},"");history.pushState(HOME_ST,"")}catch(e){}
-  if(view!==0)pushPage(view);
+/* ===== Hidden diagnostics: tap "App version" 5 times on the Help page ===== */
+var DBG=[],dbgOn=false,verN=0,verT=0;
+function dbg(s){DBG.push(s);if(DBG.length>9)DBG.shift();dbgDraw()}
+function dbgDraw(){
+  var e=document.getElementById("dbgbox");if(!dbgOn){if(e)e.style.display="none";return}
+  if(!e){e=document.createElement("div");e.id="dbgbox";e.style.cssText="position:fixed;left:6px;right:6px;top:6px;z-index:999;background:rgba(0,0,0,.88);color:#7CFC7C;font:11px/1.35 monospace;padding:8px;border-radius:8px;pointer-events:none;white-space:pre-wrap";document.body.appendChild(e)}
+  e.style.display="block";
+  var st="";try{st=JSON.stringify(history.state)}catch(x){}
+  e.textContent="v9 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
 }
+function verTap(){var n=Date.now();verN=(n-verT<1500)?verN+1:1;verT=n;if(verN>=5){verN=0;dbgOn=!dbgOn;dbgDraw()}}
+/* ===== Back button =====
+   Rule: any page -> Home.  On Home: first back shows "Press back again to exit", second back (within 2 s) leaves.
+   Chrome only keeps a history entry if it was added right after a real tap, and ONE tap pays for ONE entry.
+   So every history change below spends a "fresh tap" (fresh), and nothing is added by swipes, timers or the back button itself.
+   When an entry cannot be added yet (pend), it is added on the next tap. */
+var armed=false,armT=null,guarded=false,fresh=false,pend=false;
+var HOME_ST={mh:"app",l:0};
+function stt(){return history.state||{}}
+function pushHome(){try{history.pushState(HOME_ST,"");dbg("push HOME")}catch(e){dbg("push HOME failed")}}
+function pushPage(v){try{history.pushState({mh:"app",l:1,v:v},"");dbg("push PAGE "+v)}catch(e){dbg("push PAGE failed")}}
+try{if(stt().l===1)history.replaceState(HOME_ST,"")}catch(e){}     // after a reload, always start on Home
+/* runs on every real tap / key press, before the button's own action */
+function gesture(){
+  fresh=true;dbg("tap");
+  if(!guarded){
+    guarded=true;
+    if(!stt().mh){pushHome();fresh=false}                         // tap #1: put the Home guard in place
+    return;
+  }
+  if(armed){armed=false;clearTimeout(armT);pend=true}              // user carried on using the app: cancel the exit
+  if(pend){
+    pend=false;
+    if(!stt().mh){pushHome();fresh=false}                          // we are on the bottom entry: bring the Home guard back
+    else if(stt().l===0&&view!==0){pushPage(view);fresh=false}     // page is open but its entry was used up
+  }
+}
+addEventListener("click",gesture,true);
+addEventListener("keydown",gesture);
 /* called from show(): keep history in step with the page on screen */
 function hist(n,old){
   if(!guarded||n===old)return;
   try{
-    if(n===0){ if(history.state&&history.state.l===1)history.back() }      // popstate then lands on Home
-    else if(old===0)pushPage(n);
+    if(n===0){ if(stt().l===1){dbg("history.back()");history.back()} }                     // popstate lands on the Home entry
+    else if(old===0){ if(fresh){fresh=false;pushPage(n)} else history.replaceState({mh:"app",l:1,v:n},"") }
     else history.replaceState({mh:"app",l:1,v:n},"");
   }catch(e){}
 }
-function gesture(){
-  if(!guarded){guard();return}
-  if(armed){armed=false;clearTimeout(armT);pushHome()}   // user kept using the app: cancel the exit, guard is back
-}
-addEventListener("click",gesture,true);
-addEventListener("keydown",gesture);
 addEventListener("popstate",function(e){
+  dbg("POP -> "+JSON.stringify(e.state));
   if(!guarded||armed)return;
-  var st=e.state||{},onBase=st.mh==="base";
+  var st=e.state||{},onBase=!st.mh;
   var ms=document.getElementById("msheet"),lm=document.getElementById("locm");
-  if(ms.style.display==="block"||lm.style.display==="flex"){                 // back closes a popup first
+  if(ms.style.display==="block"||lm.style.display==="flex"){        // back closes a popup first, the page stays
     if(ms.style.display==="block")closeMenu();else if(LOCSEL)closeLoc();
-    if(onBase)pushHome();else pushPage(view);                              // put back the entry that was just used
-    return;
+    pend=true;return;
   }
-  if(view!==0){show(0,true);document.getElementById("q").value="";filter();if(onBase)pushHome();return}   // any page -> Home
-  if(onBase){                                                               // Home -> first back
+  if(view!==0){show(0,true);document.getElementById("q").value="";filter();if(onBase)pend=true;return}   // any page -> Home
+  if(onBase){                                                        // Home, first back
     armed=true;toast(T("exitHint"));
-    armT=setTimeout(function(){armed=false;pushHome()},2200);
+    armT=setTimeout(function(){armed=false;pend=true},2200);
   }
 });
 render();
