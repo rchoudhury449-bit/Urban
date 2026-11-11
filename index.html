@@ -189,7 +189,7 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
     <div class="hc"><b data-i="h5T">Emergency numbers</b><div class="acts" style="margin-top:8px"><a href="tel:112">📞 112</a><a href="tel:108">🚑 108</a><a href="tel:100">👮 100</a><a href="tel:101">🔥 101</a></div></div>
     <div class="hc" id="hsupc"><b data-i="supT">Report a problem</b><p data-i="supP">Wrong or missing provider, or any problem with the site? Message us.</p><a class="go" id="hsup" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:var(--wa)" data-i="supB">Message on WhatsApp</a></div>
     <p class="note"><a href="privacy.html" data-i="priv" style="color:var(--lk)">Privacy &amp; consent</a> · <a href="terms.html" data-i="tms" style="color:var(--lk)">Terms</a> · <a href="refund.html" data-i="rfn" style="color:var(--lk)">Refund policy</a> · <a href="contact.html" data-i="cnt" style="color:var(--lk)">Contact</a></p>
-    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 9</p>
+    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 10</p>
   </div>
 </div>
 
@@ -453,7 +453,7 @@ function dbgDraw(){
   if(!e){e=document.createElement("div");e.id="dbgbox";e.style.cssText="position:fixed;left:6px;right:6px;top:6px;z-index:999;background:rgba(0,0,0,.88);color:#7CFC7C;font:11px/1.35 monospace;padding:8px;border-radius:8px;pointer-events:none;white-space:pre-wrap";document.body.appendChild(e)}
   e.style.display="block";
   var st="";try{st=JSON.stringify(history.state)}catch(x){}
-  e.textContent="v9 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
+  e.textContent="v10 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
 }
 function verTap(){var n=Date.now();verN=(n-verT<1500)?verN+1:1;verT=n;if(verN>=5){verN=0;dbgOn=!dbgOn;dbgDraw()}}
 /* ===== Back button =====
@@ -502,7 +502,7 @@ addEventListener("popstate",function(e){
     if(ms.style.display==="block")closeMenu();else if(LOCSEL)closeLoc();
     pend=true;return;
   }
-  if(view!==0){show(0,true);document.getElementById("q").value="";filter();if(onBase)pend=true;return}   // any page -> Home
+  if(view!==0){show(0,true);document.getElementById("q").value="";filter();if(onBase)pushHome();return}   // any page -> Home (and, if we fell to the bottom entry, put the Home guard back at once so the next back shows the exit hint)
   if(onBase){                                                        // Home, first back
     armed=true;toast(T("exitHint"));
     armT=setTimeout(function(){armed=false;pend=true},2200);
