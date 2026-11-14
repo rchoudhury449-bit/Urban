@@ -88,11 +88,19 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
 .srow{display:flex;gap:8px;margin-top:6px}.srow button{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:14px;color:var(--tx)}.srow button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 .rq{background:var(--bg);border-radius:14px;padding:12px 14px;margin:0 0 10px;font-size:14px;line-height:1.45}.rq b{font-size:15px}.rq small{display:block;color:var(--mut)}.rq .ra{display:flex;gap:8px;margin-top:8px}.rq .ra a,.rq .ra button{flex:1;text-align:center;text-decoration:none;padding:9px;border-radius:10px;font-weight:700;font-size:13px;background:var(--wa);color:#fff}.rq .ra button{background:var(--card);color:var(--tx);border:1px solid var(--line);flex:none;padding:9px 14px}
 .sh-h{display:flex;align-items:center;gap:6px;margin:0 0 12px}.sh-h button{font-size:26px;padding:0 10px 0 0;color:var(--mut)}.sh-h h4{margin:0;font-size:18px}
+#tc{display:none;position:fixed;inset:0;z-index:90;background:var(--bg);overflow:auto;justify-content:center;align-items:flex-start}
+.tcb{width:min(100%,480px);padding:14px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.tcl{text-align:right}.tcl button{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:13px;color:var(--tx)}
+.tch{font-size:46px;text-align:center;margin-top:6px}#tc h3{text-align:center;margin:6px 0 4px;font-size:22px}.tcs{text-align:center;margin:0 0 14px;color:var(--mut);font-size:14px}
+.tcbox{background:var(--card);border-radius:14px;padding:12px 14px;box-shadow:0 1px 2px rgba(0,0,0,.06)}.tcbox ul{margin:0;padding-left:18px}.tcbox li{font-size:14px;line-height:1.45;margin:6px 0}
+.tcread{text-align:center;margin:12px 0;font-size:14px}.tcread a{color:var(--lk,#14418a);font-weight:700}
+.tcck{display:flex;gap:10px;align-items:flex-start;margin:6px 0 10px;font-size:14.5px;line-height:1.4}.tcck input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--navy)}
+#tc .go[disabled]{opacity:.4}.tcno{width:100%;margin-top:8px;padding:11px;color:var(--mut);font-size:14px;background:none}
 @keyframes sh{to{background-position:-200% 0}}
 .menu{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:35;background:#14181f;color:#fff;border-radius:22px;padding:11px 20px;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 #bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;display:none}
 #msheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,480px);background:var(--card);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:80vh;overflow:auto;z-index:41;display:none}
-#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:#14181f;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;z-index:90;pointer-events:none;max-width:88%;text-align:center}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:#14181f;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;z-index:95;pointer-events:none;max-width:88%;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%)}
 #locm{display:none;position:fixed;inset:0;z-index:70;background:var(--bg);justify-content:center}
 .lbox{width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
@@ -193,7 +201,7 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
     <div class="hc"><b data-i="h5T">Emergency numbers</b><div class="acts" style="margin-top:8px"><a href="tel:112">📞 112</a><a href="tel:108">🚑 108</a><a href="tel:100">👮 100</a><a href="tel:101">🔥 101</a></div></div>
     <div class="hc" id="hsupc"><b data-i="supT">Report a problem</b><p data-i="supP">Wrong or missing provider, or any problem with the site? Message us.</p><a class="go" id="hsup" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:var(--wa)" data-i="supB">Message on WhatsApp</a></div>
     <p class="note"><a href="privacy.html" data-i="priv" style="color:var(--lk)">Privacy &amp; consent</a> · <a href="terms.html" data-i="tms" style="color:var(--lk)">Terms</a> · <a href="refund.html" data-i="rfn" style="color:var(--lk)">Refund policy</a> · <a href="contact.html" data-i="cnt" style="color:var(--lk)">Contact</a></p>
-    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 11</p>
+    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 12</p>
   </div>
 </div>
 
@@ -205,6 +213,13 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
 </nav>
 <button class="menu" id="menuBtn" onclick="openMenu()">☰ <span data-i="menu">Menu</span></button>
 <div id="bg" onclick="closeMenu()"></div><div id="msheet"></div>
+<div id="tc"><div class="tcb"><div class="tcl"><button id="tcLang" onclick="toggleLang()" data-i="lbl">অসমীয়া</button></div>
+<div class="tch">🤝</div><h3 data-i="tcT">Welcome to Urban</h3><p class="tcs" data-i="tcS">Please read and accept our terms before you use the app.</p>
+<div class="tcbox"><ul><li data-i="tc1">Urban connects you with independent local providers. Urban does not do the work itself and providers are not Urban's employees.</li><li data-i="tc2">Sending a request is free. Agree on the price with Urban before work starts and pay the provider after the work is done.</li><li data-i="tc3">Providers pay Urban a 10% commission within 3 days of each job. Late fees and account suspension apply if dues are not paid.</li><li data-i="tc4">Your name, number and area are shared with a provider only after the provider accepts your job.</li><li data-i="tc5">You must be 18 or older to use Urban. Do not misuse the service or give false information.</li></ul></div>
+<p class="tcread"><a href="terms.html" target="_blank" rel="noopener" data-i="mTerm">Terms of service</a> · <a href="privacy.html" target="_blank" rel="noopener" data-i="mPriv">Privacy policy</a></p>
+<label class="tcck"><input type="checkbox" id="tcOk" onchange="tcChk()"><span data-i="tcAg">I have read and agree to the Terms of Service and Privacy Policy.</span></label>
+<button class="go" id="tcGo" disabled onclick="tcAccept()" data-i="tcBtn">Agree and continue</button>
+<button class="tcno" onclick="tcDecline()" data-i="tcNo">I do not agree</button></div></div>
 <div id="locm"><div class="lbox"><div class="lhead"><div><h4 data-i="locT">Choose your location</h4><small data-i="locS">Only villages and areas of Barpeta district are available.</small></div><button id="lclose" onclick="closeLoc()" aria-label="Close">✕</button></div><input id="lq" class="lin" data-ph="locQ" oninput="renderLoc()" autocomplete="off"><div id="llist"></div></div></div>
 <div id="toast"></div>
 
@@ -382,8 +397,17 @@ function jump(k){closeMenu();var e=document.getElementById("sec"+k);if(e)window.
 function openMenu(){document.getElementById("msheet").innerHTML='<h4 style="margin:0 0 12px;font-size:18px">'+T("menu")+'</h4>'+SECS.map(function(a,k){return'<button class="li" style="width:100%;margin:0 0 8px;background:var(--bg)" onclick="jump('+k+')"><span>'+esc(a)+'</span><u>›</u></button>'}).join("");document.getElementById("bg").style.display="block";document.getElementById("msheet").style.display="block"}
 function closeMenu(){document.getElementById("bg").style.display="none";document.getElementById("msheet").style.display="none"}
 function share(){var u=location.href.split("#")[0];if(navigator.share){navigator.share({title:"Urban",url:u}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){toast("Link copied")})}}
+Object.assign(S.en,{tcT:"Welcome to Urban",tcS:"Please read and accept our terms before you use the app.",tc1:"Urban connects you with independent local providers. Urban does not do the work itself and providers are not Urban's employees.",tc2:"Sending a request is free. Agree on the price with Urban before work starts and pay the provider after the work is done.",tc3:"Providers pay Urban a 10% commission within 3 days of each job. Late fees and account suspension apply if dues are not paid.",tc4:"Your name, number and area are shared with a provider only after the provider accepts your job.",tc5:"You must be 18 or older to use Urban. Do not misuse the service or give false information.",tcAg:"I have read and agree to the Terms of Service and Privacy Policy.",tcBtn:"Agree and continue",tcNo:"I do not agree",tcMust:"You need to agree to use Urban. You can close the app."});
+Object.assign(S.as,{tcT:"Urban লৈ স্বাগতম",tcS:"এপ ব্যৱহাৰ কৰাৰ আগতে অনুগ্ৰহ কৰি আমাৰ চৰ্তসমূহ পঢ়ি গ্ৰহণ কৰক।",tc1:"Urban এ আপোনাক স্বতন্ত্ৰ স্থানীয় সেৱা প্ৰদানকাৰীৰ সৈতে সংযোগ কৰি দিয়ে। Urban এ নিজে কাম নকৰে আৰু প্ৰদানকাৰীসকল Urban ৰ কৰ্মচাৰী নহয়।",tc2:"অনুৰোধ পঠোৱা বিনামূলীয়া। কাম আৰম্ভ হোৱাৰ আগতে Urban ৰ সৈতে দাম ঠিক কৰক আৰু কাম শেষ হোৱাৰ পিছত প্ৰদানকাৰীক টকা দিয়ক।",tc3:"প্ৰতিটো কামৰ ৩ দিনৰ ভিতৰত প্ৰদানকাৰীয়ে Urban ক ১০% কমিছন দিব লাগে। টকা নিদিলে লেট ফী আৰু একাউণ্ট বন্ধ হ'ব পাৰে।",tc4:"প্ৰদানকাৰীয়ে আপোনাৰ কাম গ্ৰহণ কৰাৰ পিছতহে আপোনাৰ নাম, নম্বৰ আৰু ঠাই তেওঁক জনোৱা হয়।",tc5:"Urban ব্যৱহাৰ কৰিবলৈ আপোনাৰ বয়স ১৮ বা তাতকৈ অধিক হ'ব লাগিব। সেৱাৰ অপব্যৱহাৰ বা মিছা তথ্য নিদিব।",tcAg:"মই চৰ্তাৱলী আৰু গোপনীয়তা নীতি পঢ়িছো আৰু সন্মত হৈছো।",tcBtn:"সন্মত হৈ আগবাঢ়ক",tcNo:"মই সন্মত নহয়",tcMust:"Urban ব্যৱহাৰ কৰিবলৈ আপুনি সন্মত হ'ব লাগিব। আপুনি এপটো বন্ধ কৰিব পাৰে।"});
+/* ===== Terms gate: must agree before using the app ===== */
+var TC_V="2026-11";
+function tcAgreed(){try{return localStorage.getItem("mh_tc")===TC_V}catch(e){return false}}
+function showTC(){var e=document.getElementById("tc");e.style.display="flex";e.scrollTop=0;document.getElementById("tcOk").checked=false;tcChk()}
+function tcChk(){document.getElementById("tcGo").disabled=!document.getElementById("tcOk").checked}
+function tcAccept(){if(!document.getElementById("tcOk").checked)return;try{localStorage.setItem("mh_tc",TC_V)}catch(e){}document.getElementById("tc").style.display="none";if(!LOCSEL)openLoc(true)}
+function tcDecline(){toast(T("tcMust"));try{window.close()}catch(e){}}
 /* ===== Three-dot menu: My requests, Settings, policies, contact, share ===== */
-var APP_VER="11",clrArm=false;
+var APP_VER="12",clrArm=false;
 function sheet(h){var m=document.getElementById("msheet");m.innerHTML=h;document.getElementById("bg").style.display="block";m.style.display="block";m.scrollTop=0}
 function mrow(ic,tx,act){return'<button class="li" style="width:100%;margin:0 0 8px;background:var(--bg)" onclick="'+act+'"><em>'+ic+'</em><span>'+tx+'</span><u>›</u></button>'}
 function mlink(ic,tx,href){return'<a class="li" style="width:100%;margin:0 0 8px;background:var(--bg);color:inherit;text-decoration:none" href="'+href+'"><em>'+ic+'</em><span>'+tx+'</span><u>›</u></a>'}
@@ -494,7 +518,8 @@ var sx=0,sy=0,st=0,sOk=false;
 addEventListener("touchstart",function(e){
   sOk=false;if(e.touches.length!==1||view===2)return;
   var t=e.target;
-  if(t.closest&&t.closest("input,textarea,select,.scroll,.acts,#locm,#msheet,#bg"))return;
+  if(t.closest&&t.closest("input,textarea,select,.scroll,.acts,#locm,#msheet,#bg,#tc"))return;
+  if(document.getElementById("tc").style.display==="flex")return;
   if(document.getElementById("locm").style.display==="flex"||document.getElementById("msheet").style.display==="block")return;
   sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();sOk=true;
 },{passive:true});
@@ -512,7 +537,7 @@ function dbgDraw(){
   if(!e){e=document.createElement("div");e.id="dbgbox";e.style.cssText="position:fixed;left:6px;right:6px;top:6px;z-index:999;background:rgba(0,0,0,.88);color:#7CFC7C;font:11px/1.35 monospace;padding:8px;border-radius:8px;pointer-events:none;white-space:pre-wrap";document.body.appendChild(e)}
   e.style.display="block";
   var st="";try{st=JSON.stringify(history.state)}catch(x){}
-  e.textContent="v11 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
+  e.textContent="v12 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
 }
 function verTap(){var n=Date.now();verN=(n-verT<1500)?verN+1:1;verT=n;if(verN>=5){verN=0;dbgOn=!dbgOn;dbgDraw()}}
 /* ===== Back button =====
@@ -568,7 +593,8 @@ addEventListener("popstate",function(e){
   }
 });
 render();
-checkPA();if(location.hash==="#providers")goProv();else if(!LOCSEL)openLoc(true);
+checkPA();if(location.hash==="#providers")goProv();else if(!LOCSEL&&tcAgreed())openLoc(true);
+if(!tcAgreed())showTC();
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 </script>
 </body>
