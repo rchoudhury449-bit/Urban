@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rate your service – Urban</title><meta name="theme-color" content="#09264F"><meta name="robots" content="noindex">
+<style>
+:root{--navy:#09264F;--bg:#f4f5f7;--card:#fff;--tx:#14181f;--mut:#6b7280;--line:#e5e7eb;--wa:#1faa59;--lk:#14418a;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1116;--card:#1a1f27;--tx:#eef1f5;--mut:#9aa3b2;--line:#2a313c;--lk:#8db4ff;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+header{background:var(--navy);color:#fff;padding:16px 16px 20px;border-radius:0 0 22px 22px;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:20px}header button{background:#fff;color:var(--navy);border:0;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px}
+main{max-width:480px;margin:0 auto;padding:16px}.card{background:var(--card);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+h2{margin:0 0 6px;font-size:19px}p{margin:6px 0;font-size:15px}.mut{color:var(--mut);font-size:13.5px}
+.big{font-size:26px;font-weight:800;margin:4px 0}.ok{color:var(--wa);font-weight:700}.err{color:#d93025;font-weight:700}
+.stars{display:flex;gap:6px;justify-content:center;margin:10px 0}.stars button{font-size:40px;line-height:1;background:none;border:0;color:#cfd4dc;padding:2px 4px}.stars button.on{color:#f5b301}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+input,textarea{width:100%;font:inherit;font-size:16px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--tx)}
+.seg{display:flex;gap:8px}.seg button{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:15px;color:var(--tx)}.seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.go{width:100%;margin-top:16px;background:var(--navy);color:#fff;border:0;border-radius:12px;padding:14px;font-weight:700;font-size:16px}.go[disabled]{opacity:.5}
+</style></head><body>
+<header><b>Urban</b><button id="lg" onclick="tgl()">অসমীয়া</button></header>
+<main id="m"><div class="card"><p class="mut" id="ld"></p></div></main>
+<script>
+var API="https://script.google.com/macros/s/AKfycbwbduMXe7_HjIw2r_5myWGqzY_n3otvxrXY8S0sCORcaMSxPKkfBwog2yzheh8MCqQx4g/exec";
+var Q=new URLSearchParams(location.search),B=Q.get("b")||"",K=Q.get("k")||"",lang="en",INFO=null,STAR=0,AOK="1",DONE=false,SENDING=false;
+var S={en:{load:"Checking…",bad:"This link is not valid. Please ask the service provider to send it again.",net:"Could not connect. Please check your internet and try again.",again:"Check again",
+ wait:"Your payment has not been received yet.",waitS:"If you have already paid, wait a minute and tap the button.",nobill:"The bill for this job has not been made yet.",
+ thanks:"Thank you!",thanksS:"Your rating has been saved.",already:"You have already rated this work.",
+ recv:"Payment received ✓",cash:"Cash payment",online:"Paid online",how:"How was the work?",rt:"Your rating",rtH:"Tap a star",cm:"Comments (optional)",
+ amtq:"Was the billed amount correct?",pa:"Amount you actually paid (₹)",yes:"Yes",no:"No",d4:"Last 4 digits of your mobile number",d4H:"To confirm it is you.",send:"Submit rating",
+ needStar:"Please choose a star rating.",need4:"Enter the last 4 digits of your mobile number.",digits:"These digits do not match. Please check and try again.",locked:"Too many wrong tries. Please try again after some time.",srv:"Something went wrong. Please try again.",by:"by",lbl:"অসমীয়া"},
+ as:{load:"পৰীক্ষা কৰি আছে…",bad:"এই লিংক সঠিক নহয়। অনুগ্ৰহ কৰি সেৱা প্ৰদানকাৰীক আকৌ পঠাবলৈ কওক।",net:"সংযোগ কৰিব পৰা নগ’ল। ইণ্টাৰনেট পৰীক্ষা কৰি আকৌ চেষ্টা কৰক।",again:"আকৌ চাওক",
+ wait:"আপোনাৰ পেমেণ্ট এতিয়াও পোৱা হোৱা নাই।",waitS:"যদি পেমেণ্ট কৰি দিছে, এক মিনিট অপেক্ষা কৰি বুটামটো টিপক।",nobill:"এই কামৰ বিল এতিয়াও বনোৱা হোৱা নাই।",
+ thanks:"ধন্যবাদ!",thanksS:"আপোনাৰ ৰেটিং সংৰক্ষণ কৰা হ’ল।",already:"আপুনি এই কামৰ ৰেটিং আগতেই দিছে।",
+ recv:"পেমেণ্ট পোৱা গ’ল ✓",cash:"নগদ পেমেণ্ট",online:"অনলাইনত পৰিশোধ",how:"কাম কেনে আছিল?",rt:"আপোনাৰ ৰেটিং",rtH:"এটা তৰা টিপক",cm:"মন্তব্য (ঐচ্ছিক)",
+ amtq:"বিলৰ পৰিমাণ ঠিক আছিল নেকি?",pa:"আপুনি প্ৰকৃততে দিয়া পৰিমাণ (₹)",yes:"হয়",no:"নহয়",d4:"আপোনাৰ মোবাইল নম্বৰৰ শেষৰ ৪ আংক",d4H:"আপুনিয়ে বুলি নিশ্চিত কৰিবলৈ।",send:"ৰেটিং জমা দিয়ক",
+ needStar:"অনুগ্ৰহ কৰি তৰা বাছক।",need4:"মোবাইল নম্বৰৰ শেষৰ ৪ আংক লিখক।",digits:"এই আংকবোৰ নিমিলিল। পৰীক্ষা কৰি আকৌ চেষ্টা কৰক।",locked:"বহুবাৰ ভুল হ’ল। কিছু সময়ৰ পিছত আকৌ চেষ্টা কৰক।",srv:"কিবা ভুল হ’ল। আকৌ চেষ্টা কৰক।",by:"–",lbl:"English"}};
+function T(k){return S[lang][k]}
+function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function tgl(){lang=lang==="en"?"as":"en";document.documentElement.lang=lang==="as"?"as":"en";document.getElementById("lg").textContent=T("lbl");redraw(keep())}
+function call(o){var q=Object.keys(o).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(o[k])}).join("&");return fetch(API+"?"+q,{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json()})}
+function load(){INFO=null;draw();if(!B||!K){INFO={ok:false,err:"link"};draw();return}
+  call({a:"binfo",b:B,k:K}).then(function(j){INFO=j;draw()}).catch(function(){INFO={ok:false,err:"net"};draw()})}
+function put(h){document.getElementById("m").innerHTML=h}
+function draw(){
+  var i=INFO;
+  if(!i)return put('<div class="card"><p class="mut">'+T("load")+'</p></div>');
+  if(DONE)return put('<div class="card" style="text-align:center"><div class="big">⭐</div><h2>'+T("thanks")+'</h2><p class="mut">'+T("thanksS")+'</p></div>');
+  if(!i.ok)return put('<div class="card"><p class="err">'+T(i.err==="net"?"net":"bad")+'</p>'+(i.err==="net"?'<button class="go" onclick="load()">'+T("again")+'</button>':'')+'</div>');
+  var sum='<div class="card"><p class="mut">'+esc(i.service)+' '+T("by")+' '+esc(i.provider)+'</p><div class="big">₹'+i.amount+'</div><p class="ok">'+(i.mode==="Online"?T("recv"):T("cash"))+'</p></div>';
+  if(i.status==="Billed")return put('<div class="card"><h2>'+T("wait")+'</h2><p class="mut">'+T("waitS")+'</p><button class="go" onclick="load()">'+T("again")+'</button></div>');
+  if(i.status!=="Completed")return put('<div class="card"><p>'+T("nobill")+'</p></div>');
+  if(i.rated)return put(sum+'<div class="card"><p>'+T("already")+'</p></div>');
+  var st="";for(var n=1;n<=5;n++)st+='<button type="button" class="'+(n<=STAR?"on":"")+'" onclick="setStar('+n+')" aria-label="'+n+'">★</button>';
+  put(sum+'<div class="card"><h2>'+T("how")+'</h2><p class="mut" style="text-align:center">'+T("rtH")+'</p><div class="stars">'+st+'</div>'
+   +'<label>'+T("cm")+'</label><textarea id="rv" rows="3" maxlength="300"></textarea>'
+   +'<label>'+T("amtq")+'</label><div class="seg"><button type="button" class="'+(AOK==="1"?"on":"")+'" onclick="setOk(\'1\')">'+T("yes")+'</button><button type="button" class="'+(AOK==="0"?"on":"")+'" onclick="setOk(\'0\')">'+T("no")+'</button></div>'
+   +(AOK==="0"?'<label>'+T("pa")+'</label><input id="pa" inputmode="numeric" maxlength="7" autocomplete="off">':'')+'<label>'+T("d4")+'</label><input id="d4" inputmode="numeric" maxlength="4" autocomplete="off"><p class="mut">'+T("d4H")+'</p>'
+   +'<p class="err" id="em" style="display:none"></p><button class="go" id="go" onclick="send()">'+T("send")+'</button></div>');
+}
+function keep(){var r=document.getElementById("rv"),d=document.getElementById("d4"),a=document.getElementById("pa");return{r:r?r.value:"",d:d?d.value:"",a:a?a.value:""}}
+function redraw(k){draw();var r=document.getElementById("rv"),d=document.getElementById("d4"),a=document.getElementById("pa");if(r)r.value=k.r;if(d)d.value=k.d;if(a)a.value=k.a||""}
+function setStar(n){var k=keep();STAR=n;redraw(k)}
+function setOk(v){var k=keep();AOK=v;redraw(k)}
+function em(t){var e=document.getElementById("em");e.textContent=t;e.style.display="block"}
+function send(){
+  if(SENDING)return;var k=keep(),d=k.d.replace(/\D/g,"");
+  if(!STAR)return em(T("needStar"));if(d.length!==4)return em(T("need4"));
+  SENDING=true;document.getElementById("go").disabled=true;
+  call({a:"rate",b:B,k:K,s:STAR,r:k.r,ok:AOK,d:d,pa:(k.a||"").replace(/\D/g,"")}).then(function(j){SENDING=false;
+    if(j&&j.ok){DONE=true;draw()}
+    else if(j&&j.err==="done"){load()}
+    else{document.getElementById("go").disabled=false;em(T(j&&j.err==="digits"?"digits":j&&j.err==="locked"?"locked":"srv"))}
+  }).catch(function(){SENDING=false;document.getElementById("go").disabled=false;em(T("net"))});
+}
+load();
+</script></body></html>

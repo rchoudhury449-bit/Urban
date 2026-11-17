@@ -96,6 +96,11 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
 .tcread{text-align:center;margin:12px 0;font-size:14px}.tcread a{color:var(--lk,#14418a);font-weight:700}
 .tcck{display:flex;gap:10px;align-items:flex-start;margin:6px 0 10px;font-size:14.5px;line-height:1.4}.tcck input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--navy)}
 #tc .go[disabled]{opacity:.4}.tcno{width:100%;margin-top:8px;padding:11px;color:var(--mut);font-size:14px;background:none}
+.tgl{color:var(--lk);font-weight:700;font-size:13.5px;padding:10px 0 4px}
+.jbsum{display:flex;gap:8px;margin-top:10px}.jbsum div{flex:1;background:var(--bg);border-radius:12px;padding:10px 4px;text-align:center}.jbsum b{display:block;font-size:17px;margin:0}.jbsum span{font-size:11.5px;color:var(--mut)}
+.jb small{display:block;color:var(--mut);margin-top:2px}.jbh{display:flex;justify-content:space-between;gap:8px;align-items:center}.jbh b{margin:0}.jbs{font-size:12.5px;font-weight:700;text-align:right}
+.jbb{display:flex;gap:8px;margin-top:8px}.jbb .go,.jbb button{flex:1;margin-top:0}.jbb button:not(.go){padding:11px 6px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:13.5px;color:var(--tx)}
+.bsum{font-size:13.5px;margin:12px 2px 0;min-height:20px;line-height:1.45}.bnote{font-size:12px;color:var(--mut);margin:8px 2px 0}
 @keyframes sh{to{background-position:-200% 0}}
 .menu{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:35;background:#14181f;color:#fff;border-radius:22px;padding:11px 20px;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 #bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;display:none}
@@ -168,7 +173,7 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
     <div class="hc"><b data-i="p_hT">How it works</b><ol><li data-i="p_h1">Register with the form below.</li><li data-i="p_h2">Urban verifies your details and calls you.</li><li data-i="p_h3">Urban sends you jobs. At first you see only the customer’s area.</li><li data-i="p_h4">When you accept, Urban shares the customer’s phone number.</li><li data-i="p_h5">The customer pays Urban. Urban pays you after deducting the commission.</li></ol></div>
     <div class="hc"><b data-i="p_rT">Rules</b><p data-i="p_rA">Do not take customers’ phone numbers or money directly.</p></div>
     <div class="hc"><b data-i="p_cT">Commission</b><p id="p_terms" style="color:var(--tx)"></p></div>
-    <div class="hc"><b data-i="lg_T">Already a provider?</b><p data-i="lg_S">Enter the mobile number you registered with.</p><input class="lin" id="pcode" style="width:100%;margin:8px 0 0" autocomplete="off" inputmode="numeric" data-ph="lg_P" placeholder="10-digit mobile number"><button class="go" onclick="provLogin()" data-i="lg_B">Open provider area</button><p id="lg_msg" style="display:none;margin:10px 0 0;font-weight:700;color:#d93025"></p></div>
+    <div class="hc"><b data-i="lg_T">Already a provider?</b><p data-i="lg_S">Enter your mobile number and 4-digit PIN.</p><input class="lin" id="pcode" style="width:100%;margin:8px 0 0" autocomplete="tel-national" inputmode="numeric" maxlength="10" data-ph="lg_P" placeholder="10-digit mobile number"><input class="lin" id="ppin" type="password" style="width:100%;margin:8px 0 0" autocomplete="current-password" inputmode="numeric" maxlength="4" data-ph="lg_pin" placeholder="4-digit PIN"><button class="tgl" id="lg_tg" onclick="lgFirst()" data-i="lg_first">First time or forgot PIN?</button><div id="lg_fc" style="display:none"><input class="lin" id="pcc" style="width:100%;margin:4px 0 0" autocomplete="one-time-code" inputmode="numeric" maxlength="6" data-ph="lg_cc" placeholder="Login code from Urban"><p style="margin:6px 0 0;font-size:12.5px;color:var(--mut)" data-i="lg_ccH"></p></div><button class="go" onclick="provLogin()" data-i="lg_B">Open provider area</button><p id="lg_msg" style="display:none;margin:10px 0 0;font-weight:700;color:#d93025"></p></div>
     <div class="wrap">
       <button class="go" onclick="reg()" data-i="reg">Register as provider</button>
       <a class="go" id="p_wa" href="#" target="_blank" rel="noopener" style="display:none;text-align:center;text-decoration:none;background:var(--card);color:var(--tx);border:1px solid var(--line)" data-i="p_wa">Message Urban on WhatsApp</a>
@@ -181,6 +186,7 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
     <div id="pa_main">
     <div class="hc" id="pa_hic"><p style="margin:0;color:var(--tx)" data-i="pa_hi">Welcome! You are a verified Urban provider.</p></div>
     <div class="hc"><b data-i="p_hT">How it works</b><p data-i="pa_jobs">Urban sends you jobs on WhatsApp with the customer’s area only. Reply YES to accept. Urban then shares the customer’s phone number.</p></div>
+    <div id="pa_jobx"></div>
     <div id="pa_acct"></div>
     <div class="hc"><b data-i="p_cT">Commission</b><p id="pa_c"></p></div>
     <div class="hc"><b data-i="p_rT">Rules</b><p data-i="p_rA">Do not take customers’ phone numbers or money directly.</p></div>
@@ -201,7 +207,7 @@ nav button span{font-size:20px}nav button.on{color:var(--tx);font-weight:700}
     <div class="hc"><b data-i="h5T">Emergency numbers</b><div class="acts" style="margin-top:8px"><a href="tel:112">📞 112</a><a href="tel:108">🚑 108</a><a href="tel:100">👮 100</a><a href="tel:101">🔥 101</a></div></div>
     <div class="hc" id="hsupc"><b data-i="supT">Report a problem</b><p data-i="supP">Wrong or missing provider, or any problem with the site? Message us.</p><a class="go" id="hsup" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:var(--wa)" data-i="supB">Message on WhatsApp</a></div>
     <p class="note"><a href="privacy.html" data-i="priv" style="color:var(--lk)">Privacy &amp; consent</a> · <a href="terms.html" data-i="tms" style="color:var(--lk)">Terms</a> · <a href="refund.html" data-i="rfn" style="color:var(--lk)">Refund policy</a> · <a href="contact.html" data-i="cnt" style="color:var(--lk)">Contact</a></p>
-    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 12</p>
+    <p class="note" style="margin-top:0" id="ver" onclick="verTap()">App version 14</p>
   </div>
 </div>
 
@@ -339,26 +345,8 @@ function getProfile(h){var q=h.indexOf("p:")===0?"p="+h.slice(2):"h="+h;return f
 function setIn(h,pf){PA=true;PROFILE=pf||null;try{localStorage.setItem("mh_pa",h);if(pf)localStorage.setItem("mh_pf",JSON.stringify(pf))}catch(e){}}
 function logoutPA(){PA=false;PROFILE=null;try{localStorage.removeItem("mh_pa");localStorage.removeItem("mh_pf")}catch(e){}}
 function blk(j){var m=T("lg_blk").replace("{x}",j.total||0),e=document.getElementById("lg_msg");if(e){e.textContent=m;e.style.display="block"}toast(m)}
-function provLogin(){
-  var lm=document.getElementById("lg_msg");if(lm)lm.style.display="none";
-  var raw=fv("pcode"),d=raw.replace(/\D/g,"");
-  function done(k,j){if(j&&j.ok){setIn(k,j.profile);show(5);renderPro()}else if(j&&j.blocked)blk(j);else toast(T("lg_bad"))}
-  if(d.length>=10&&PROFILE_API){var k="p:"+d.slice(-10);
-    getProfile(k).then(function(j){done(k,j)}).catch(function(){toast(T("lg_net"))});return}
-  var c=raw.toUpperCase().replace(/[^A-Z0-9]/g,"");
-  if(c.length<8){toast(T("lg_bad"));return}
-  sha(c).then(function(h){
-    if(PROFILE_API)return getProfile(h).then(function(j){done(h,j)});
-    return accessList().then(function(l){if(Array.isArray(l)&&l.indexOf(h)>-1){setIn(h,null);show(5)}else toast(T("lg_bad"))});
-  }).catch(function(){toast(T("lg_net"))});
-}
+/* provider login: see "Provider jobs" block below (PIN based) */
 function paOut(){logoutPA();show(4)}
-function checkPA(){
-  var h=null;try{h=localStorage.getItem("mh_pa")}catch(e){}
-  if(!h)return;PA=true;
-  var p=PROFILE_API?getProfile(h).then(function(j){if(j&&j.ok){PROFILE=j.profile;try{localStorage.setItem("mh_pf",JSON.stringify(j.profile))}catch(e){}renderProfile();renderPro()}else{if(j&&j.blocked)blk(j);throw "no"}}):accessList().then(function(l){if(!Array.isArray(l)||l.indexOf(h)<0)throw "no"});
-  p.catch(function(e){if(e==="no"){logoutPA();if(view===5)show(4)}});
-}
 function goProv(){show(PA?5:4)}
 function renderProfile(){
   var e=document.getElementById("pa_prof");if(!e)return;
@@ -367,7 +355,7 @@ function renderProfile(){
   if(!p){e.innerHTML='<p class="msg">'+T("pf_load")+'</p>';return}
   function row(k,v){return v?'<div class="pfrow"><span style="color:var(--mut)">'+T(k)+'</span><b>'+esc(v)+'</b></div>':""}
   e.innerHTML='<div class="hc"><div style="display:flex;gap:12px;align-items:center;margin-bottom:6px"><div class="av">'+esc((p.name||"?").charAt(0).toUpperCase())+'</div><div><b style="font-size:17px;margin:0">'+esc(p.name)+'</b><small style="display:block;margin-top:2px;font-weight:700;color:'+(p.verified?"var(--wa)":"var(--mut)")+'">'+(p.verified?"✔ "+T("pf_ver"):T("pf_nver"))+'</small></div></div>'
-   +row("pf_svc",p.service)+row("pf_desc",p.desc)+row("pf_phone",p.phone)+row("pf_area",p.area)+row("pf_hrs",p.hours)+row("pf_lng",p.languages)+row("pf_since",p.since)+row("pf_jobs",String(p.jobs||0))+'</div>';
+   +row("pf_svc",p.service)+row("pf_desc",p.desc)+row("pf_phone",p.phone)+row("pf_area",p.area)+row("pf_hrs",p.hours)+row("pf_lng",p.languages)+row("pf_since",p.since)+row("pf_rating",p.ratings?"★ "+p.rating+" ("+p.ratings+")":"")+row("pf_jobs",String(p.jobs||0))+'</div>';
 }
 function fmtD(iso){if(!iso)return "";var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],p=iso.split("-");return(+p[2])+" "+M[+p[1]-1]+" "+p[0]}
 function renderAcct(){
@@ -391,23 +379,168 @@ function renderPro(){
   if(hic)hic.style.display=(!PROFILE||PROFILE.verified)?"block":"none";
   [w,w2].forEach(function(e){if(e){e.style.display=SUPPORT_WA?"block":"none";e.href=msg}});
   if(chg){var on=SUPPORT_WA&&PROFILE_API&&PROFILE;chg.style.display=on?"block":"none";if(on)chg.href="https://wa.me/"+SUPPORT_WA+"?text="+encodeURIComponent("Urban – please update my provider profile.\nName: "+PROFILE.name+"\nWhat to change: ")}
-  renderAcct();renderProfile();
+  renderAcct();renderProfile();renderJobs();
 }
 function jump(k){closeMenu();var e=document.getElementById("sec"+k);if(e)window.scrollTo({top:e.getBoundingClientRect().top+window.scrollY-70,behavior:"smooth"})}
 function openMenu(){document.getElementById("msheet").innerHTML='<h4 style="margin:0 0 12px;font-size:18px">'+T("menu")+'</h4>'+SECS.map(function(a,k){return'<button class="li" style="width:100%;margin:0 0 8px;background:var(--bg)" onclick="jump('+k+')"><span>'+esc(a)+'</span><u>›</u></button>'}).join("");document.getElementById("bg").style.display="block";document.getElementById("msheet").style.display="block"}
 function closeMenu(){document.getElementById("bg").style.display="none";document.getElementById("msheet").style.display="none"}
 function share(){var u=location.href.split("#")[0];if(navigator.share){navigator.share({title:"Urban",url:u}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){toast("Link copied")})}}
-Object.assign(S.en,{tcT:"Welcome to Urban",tcS:"Please read and accept our terms before you use the app.",tc1:"Urban connects you with independent local providers. Urban does not do the work itself and providers are not Urban's employees.",tc2:"Sending a request is free. Agree on the price with Urban before work starts and pay the provider after the work is done.",tc3:"Providers pay Urban a 10% commission within 3 days of each job. Late fees and account suspension apply if dues are not paid.",tc4:"Your name, number and area are shared with a provider only after the provider accepts your job.",tc5:"You must be 18 or older to use Urban. Do not misuse the service or give false information.",tcAg:"I have read and agree to the Terms of Service and Privacy Policy.",tcBtn:"Agree and continue",tcNo:"I do not agree",tcMust:"You need to agree to use Urban. You can close the app."});
-Object.assign(S.as,{tcT:"Urban লৈ স্বাগতম",tcS:"এপ ব্যৱহাৰ কৰাৰ আগতে অনুগ্ৰহ কৰি আমাৰ চৰ্তসমূহ পঢ়ি গ্ৰহণ কৰক।",tc1:"Urban এ আপোনাক স্বতন্ত্ৰ স্থানীয় সেৱা প্ৰদানকাৰীৰ সৈতে সংযোগ কৰি দিয়ে। Urban এ নিজে কাম নকৰে আৰু প্ৰদানকাৰীসকল Urban ৰ কৰ্মচাৰী নহয়।",tc2:"অনুৰোধ পঠোৱা বিনামূলীয়া। কাম আৰম্ভ হোৱাৰ আগতে Urban ৰ সৈতে দাম ঠিক কৰক আৰু কাম শেষ হোৱাৰ পিছত প্ৰদানকাৰীক টকা দিয়ক।",tc3:"প্ৰতিটো কামৰ ৩ দিনৰ ভিতৰত প্ৰদানকাৰীয়ে Urban ক ১০% কমিছন দিব লাগে। টকা নিদিলে লেট ফী আৰু একাউণ্ট বন্ধ হ'ব পাৰে।",tc4:"প্ৰদানকাৰীয়ে আপোনাৰ কাম গ্ৰহণ কৰাৰ পিছতহে আপোনাৰ নাম, নম্বৰ আৰু ঠাই তেওঁক জনোৱা হয়।",tc5:"Urban ব্যৱহাৰ কৰিবলৈ আপোনাৰ বয়স ১৮ বা তাতকৈ অধিক হ'ব লাগিব। সেৱাৰ অপব্যৱহাৰ বা মিছা তথ্য নিদিব।",tcAg:"মই চৰ্তাৱলী আৰু গোপনীয়তা নীতি পঢ়িছো আৰু সন্মত হৈছো।",tcBtn:"সন্মত হৈ আগবাঢ়ক",tcNo:"মই সন্মত নহয়",tcMust:"Urban ব্যৱহাৰ কৰিবলৈ আপুনি সন্মত হ'ব লাগিব। আপুনি এপটো বন্ধ কৰিব পাৰে।"});
+Object.assign(S.en,{tcT:"Welcome to Urban",tcS:"Please read and accept our terms before you use the app.",tc1:"Urban connects you with independent local providers. Urban does not do the work itself and providers are not Urban's employees.",tc2:"Sending a request is free. Agree on the price with Urban before work starts. After the work you pay the provider in cash, or online through Urban.",tc3:"For cash jobs, providers pay Urban a 10% commission within 3 days. For online payments, Urban keeps 10% and pays the rest to the provider. Late fees and suspension apply if dues are not paid.",tc4:"Your name, number and area are shared with a provider only after the provider accepts your job.",tc5:"You must be 18 or older to use Urban. Do not misuse the service or give false information.",tcAg:"I have read and agree to the Terms of Service and Privacy Policy.",tcBtn:"Agree and continue",tcNo:"I do not agree",tcMust:"You need to agree to use Urban. You can close the app."});
+Object.assign(S.as,{tcT:"Urban লৈ স্বাগতম",tcS:"এপ ব্যৱহাৰ কৰাৰ আগতে অনুগ্ৰহ কৰি আমাৰ চৰ্তসমূহ পঢ়ি গ্ৰহণ কৰক।",tc1:"Urban এ আপোনাক স্বতন্ত্ৰ স্থানীয় সেৱা প্ৰদানকাৰীৰ সৈতে সংযোগ কৰি দিয়ে। Urban এ নিজে কাম নকৰে আৰু প্ৰদানকাৰীসকল Urban ৰ কৰ্মচাৰী নহয়।",tc2:"অনুৰোধ পঠোৱা বিনামূলীয়া। কাম আৰম্ভ হোৱাৰ আগতে Urban ৰ সৈতে দাম ঠিক কৰক। কাম শেষ হোৱাৰ পিছত প্ৰদানকাৰীক নগদ দিয়ক, বা Urban ৰ জৰিয়তে অনলাইনত দিয়ক।",tc3:"নগদ কামত প্ৰদানকাৰীয়ে ৩ দিনৰ ভিতৰত Urban ক ১০% কমিছন দিব লাগে। অনলাইন পেমেণ্টত Urban এ ১০% ৰাখি বাকী ধন প্ৰদানকাৰীক দিয়ে। টকা নিদিলে লেট ফী আৰু একাউণ্ট বন্ধ হ'ব পাৰে।",tc4:"প্ৰদানকাৰীয়ে আপোনাৰ কাম গ্ৰহণ কৰাৰ পিছতহে আপোনাৰ নাম, নম্বৰ আৰু ঠাই তেওঁক জনোৱা হয়।",tc5:"Urban ব্যৱহাৰ কৰিবলৈ আপোনাৰ বয়স ১৮ বা তাতকৈ অধিক হ'ব লাগিব। সেৱাৰ অপব্যৱহাৰ বা মিছা তথ্য নিদিব।",tcAg:"মই চৰ্তাৱলী আৰু গোপনীয়তা নীতি পঢ়িছো আৰু সন্মত হৈছো।",tcBtn:"সন্মত হৈ আগবাঢ়ক",tcNo:"মই সন্মত নহয়",tcMust:"Urban ব্যৱহাৰ কৰিবলৈ আপুনি সন্মত হ'ব লাগিব। আপুনি এপটো বন্ধ কৰিব পাৰে।"});
 /* ===== Terms gate: must agree before using the app ===== */
-var TC_V="2026-11";
+var TC_V="2026-11b";
 function tcAgreed(){try{return localStorage.getItem("mh_tc")===TC_V}catch(e){return false}}
 function showTC(){var e=document.getElementById("tc");e.style.display="flex";e.scrollTop=0;document.getElementById("tcOk").checked=false;tcChk()}
 function tcChk(){document.getElementById("tcGo").disabled=!document.getElementById("tcOk").checked}
 function tcAccept(){if(!document.getElementById("tcOk").checked)return;try{localStorage.setItem("mh_tc",TC_V)}catch(e){}document.getElementById("tc").style.display="none";if(!LOCSEL)openLoc(true)}
 function tcDecline(){toast(T("tcMust"));try{window.close()}catch(e){}}
+Object.assign(S.en,{lg_S:"Enter your mobile number and 4-digit PIN.",lg_pin:"4-digit PIN",lg_first:"First time or forgot PIN?",lg_cc:"Login code from Urban (6 digits)",lg_ccH:"Urban gives you this code on WhatsApp or by call. Type a new 4-digit PIN above. You will use that PIN every time.",lg_needCode:"First time? Enter the login code you got from Urban.",lg_lock:"Too many wrong tries. Try again after 15 minutes.",lg_bad2:"Mobile number, PIN or code is wrong",
+pa_jobs:"Urban assigns jobs here. At first you see only the customer’s area. Tap Accept to see the customer’s number. When the job is done, make the bill here.",
+p_h5:"Cash job: you take the money and pay Urban the commission within 3 days. Online job: the customer pays Urban and Urban pays you the rest after deducting the commission.",
+p_rA:"Do not do Urban customers’ work outside Urban, and always make the bill in the app. Breaking this rule leads to removal and a penalty as per the agreement.",
+jb_T:"My jobs",jb_open:"Open jobs",jb_pay:"Payout due",jb_rate:"Rating",jb_new:"Create a bill (own customer)",jb_none:"No jobs yet. Urban will assign jobs here. You can also make a bill for your own customer.",jb_sAs:"New job",jb_sAc:"Pending – make bill",jb_sBi:"Waiting for payment",jb_sCo:"Complete",jb_sDe:"Declined",jb_amt:"Bill",jb_cash:"Cash",jb_online:"Online",jb_com:"Urban commission (added to your account)",jb_toRecv:"Payout (Urban will pay you)",jb_paidU:"Paid to you by Urban",jb_acc:"Accept",jb_dec:"Decline",jb_dec2:"Tap again to decline",jb_mk:"Create bill",jb_sendP:"Send payment link on WhatsApp",jb_copy:"Copy link",jb_chk:"Check payment",jb_askR:"Ask customer to rate",jb_bill:"Create bill",jb_amtL:"Bill amount (₹)",jb_how:"How will the customer pay?",jb_submit:"Submit bill",jb_final:"After you submit, the amount cannot be changed.",jb_warn:"Urban checks bills with customers. If the customer paid more than the bill, commission is charged on the real amount. First time: a warning. Next time: a penalty and possible suspension.",jb_vOK:"✓ Bill checked",jb_vMis:"⚠ Amount corrected by Urban",jb_sumC:"Cash: you take ₹{a} from the customer. Urban commission ₹{c} is added to your account. Pay it within {d} days.",jb_sumO:"Online: the customer pays ₹{a} to Urban. Urban keeps ₹{c} commission and pays you ₹{p}.",jb_eamt:"Enter the bill amount (₹1 to ₹100000)",jb_emode:"Choose Cash or Online",jb_doneT:"Bill complete",jb_doneC:"Cash bill saved. Commission ₹{c} is added to your account. Ask the customer to rate your work.",jb_linkT:"Payment link ready",jb_linkS:"Send this link to the customer. When the customer pays, the job becomes Complete and Urban pays you ₹{p} after deducting commission.",jb_paid:"Payment received. Job complete.",jb_notyet:"Payment not received yet",jb_close:"Close",jb_copied:"Link copied",jb_wait:"Please wait…",jb_msgPay:"Hello {n}, please pay ₹{a} for {s} (by {p}) through Urban: {l}",jb_msgRate:"Hello {n}, thank you for using Urban. Please rate the work done by {p}: {l}",pf_rating:"Rating",
+er_bad:"Something is wrong with the details",er_state:"This job has changed. Please refresh.",er_amt:"Enter a valid amount",er_cust:"Enter the customer’s name and 10-digit mobile number",er_pay:"Could not create the payment link. Try again, or choose Cash.",er_busy:"Urban is busy. Try again in a moment.",er_server:"Something went wrong. Try again."});
+Object.assign(S.as,{lg_S:"আপোনাৰ মোবাইল নম্বৰ আৰু ৪ আংকৰ PIN দিয়ক।",lg_pin:"৪ আংকৰ PIN",lg_first:"প্ৰথমবাৰ নে PIN পাহৰিলে?",lg_cc:"Urban-ৰ পৰা পোৱা লগইন ক’ড (৬ আংক)",lg_ccH:"Urban-এ এই ক’ড WhatsApp বা ফোনত জনাব। ওপৰত নিজৰ নতুন ৪ আংকৰ PIN লিখক। প্ৰতিবাৰ সেই PIN ব্যৱহাৰ কৰিব।",lg_needCode:"প্ৰথমবাৰ? Urban-ৰ পৰা পোৱা লগইন ক’ড দিয়ক।",lg_lock:"বহুবাৰ ভুল হ’ল। ১৫ মিনিটৰ পিছত আকৌ চেষ্টা কৰক।",lg_bad2:"মোবাইল নম্বৰ, PIN বা ক’ড ভুল",
+pa_jobs:"Urban-এ ইয়াতে আপোনাক কাম দিব। প্ৰথমতে কেৱল গ্ৰাহকৰ এলেকা দেখিব। ‘গ্ৰহণ কৰক’ টিপিলে গ্ৰাহকৰ নম্বৰ দেখিব। কাম শেষ হ’লে ইয়াতে বিল বনাওক।",
+p_h5:"নগদ কাম: আপুনি ধন লব আৰু ৩ দিনৰ ভিতৰত Urban-ক কমিছন দিব। অনলাইন কাম: গ্ৰাহকে Urban-ক ধন দিব আৰু Urban-এ কমিছন কাটি বাকী ধন আপোনাক দিব।",
+p_rA:"Urban-ৰ গ্ৰাহকৰ কাম Urban-ৰ বাহিৰত নকৰিব, আৰু সদায় এপত বিল বনাব। এই নিয়ম ভংগ কৰিলে চুক্তি অনুসৰি আঁতৰোৱা আৰু জৰিমনা কৰা হ’ব।",
+jb_T:"মোৰ কাম",jb_open:"চলিত কাম",jb_pay:"পাবলগীয়া ধন",jb_rate:"ৰেটিং",jb_new:"বিল বনাওক (নিজৰ গ্ৰাহক)",jb_none:"এতিয়ালৈ কোনো কাম নাই। Urban-এ ইয়াতে কাম দিব। আপুনি নিজৰ গ্ৰাহকৰ বাবেও বিল বনাব পাৰে।",jb_sAs:"নতুন কাম",jb_sAc:"বাকী – বিল বনাওক",jb_sBi:"পেমেণ্টৰ অপেক্ষাত",jb_sCo:"সম্পূৰ্ণ",jb_sDe:"অস্বীকাৰ কৰা",jb_amt:"বিল",jb_cash:"নগদ",jb_online:"অনলাইন",jb_com:"Urban কমিছন (আপোনাৰ একাউণ্টত যোগ)",jb_toRecv:"পাবলগীয়া ধন (Urban-এ দিব)",jb_paidU:"Urban-এ আপোনাক দিলে",jb_acc:"গ্ৰহণ কৰক",jb_dec:"অস্বীকাৰ কৰক",jb_dec2:"অস্বীকাৰ কৰিবলৈ আকৌ টিপক",jb_mk:"বিল বনাওক",jb_sendP:"WhatsApp-ত পেমেণ্ট লিংক পঠাওক",jb_copy:"লিংক কপি কৰক",jb_chk:"পেমেণ্ট চাওক",jb_askR:"গ্ৰাহকক ৰেটিং দিবলৈ কওক",jb_bill:"বিল বনাওক",jb_amtL:"বিলৰ পৰিমাণ (₹)",jb_how:"গ্ৰাহকে কেনেকৈ পেমেণ্ট কৰিব?",jb_submit:"বিল জমা দিয়ক",jb_final:"জমা দিয়াৰ পিছত পৰিমাণ সলনি কৰিব নোৱাৰি।",jb_warn:"Urban-এ গ্ৰাহকৰ সৈতে বিল পৰীক্ষা কৰে। গ্ৰাহকে বিলতকৈ বেছি ধন দিলে প্ৰকৃত পৰিমাণৰ ওপৰত কমিছন লগা হ’ব। প্ৰথমবাৰ: সতৰ্কবাণী। পৰৱৰ্তী বাৰ: জৰিমনা আৰু একাউণ্ট বন্ধ হ’ব পাৰে।",jb_vOK:"✓ বিল পৰীক্ষা কৰা হ’ল",jb_vMis:"⚠ Urban-এ পৰিমাণ শুধৰালে",jb_sumC:"নগদ: আপুনি গ্ৰাহকৰ পৰা ₹{a} লব। Urban কমিছন ₹{c} আপোনাৰ একাউণ্টত যোগ হ’ব। {d} দিনৰ ভিতৰত দিয়ক।",jb_sumO:"অনলাইন: গ্ৰাহকে Urban-ক ₹{a} দিব। Urban-এ ₹{c} কমিছন ৰাখি আপোনাক ₹{p} দিব।",jb_eamt:"বিলৰ পৰিমাণ লিখক (₹১ ৰ পৰা ₹১০০০০০)",jb_emode:"নগদ বা অনলাইন বাছক",jb_doneT:"বিল সম্পূৰ্ণ",jb_doneC:"নগদ বিল সংৰক্ষিত। কমিছন ₹{c} আপোনাৰ একাউণ্টত যোগ হ’ল। গ্ৰাহকক আপোনাৰ কামৰ ৰেটিং দিবলৈ কওক।",jb_linkT:"পেমেণ্ট লিংক সাজু",jb_linkS:"এই লিংক গ্ৰাহকলৈ পঠাওক। গ্ৰাহকে পেমেণ্ট কৰিলে কাম সম্পূৰ্ণ হ’ব আৰু Urban-এ কমিছন কাটি আপোনাক ₹{p} দিব।",jb_paid:"পেমেণ্ট পোৱা গ’ল। কাম সম্পূৰ্ণ।",jb_notyet:"পেমেণ্ট এতিয়াও পোৱা নাই",jb_close:"বন্ধ কৰক",jb_copied:"লিংক কপি হ’ল",jb_wait:"অপেক্ষা কৰক…",jb_msgPay:"নমস্কাৰ {n}, অনুগ্ৰহ কৰি Urban-ৰ জৰিয়তে {s}ৰ (দিছে {p}) বাবে ₹{a} পেমেণ্ট কৰক: {l}",jb_msgRate:"নমস্কাৰ {n}, Urban ব্যৱহাৰ কৰাৰ বাবে ধন্যবাদ। {p}-এ কৰা কামৰ ৰেটিং দিয়ক: {l}",pf_rating:"ৰেটিং",
+er_bad:"তথ্যত কিবা ভুল আছে",er_state:"এই কামৰ অৱস্থা সলনি হৈছে। অনুগ্ৰহ কৰি ৰিফ্ৰেশ্ব কৰক।",er_amt:"সঠিক পৰিমাণ লিখক",er_cust:"গ্ৰাহকৰ নাম আৰু ১০ আংকৰ মোবাইল নম্বৰ লিখক",er_pay:"পেমেণ্ট লিংক বনাব পৰা নগ’ল। আকৌ চেষ্টা কৰক, বা নগদ বাছক।",er_busy:"Urban ব্যস্ত। অলপ পিছত আকৌ চেষ্টা কৰক।",er_server:"কিবা ভুল হ’ল। আকৌ চেষ্টা কৰক।"});
+/* ===== Provider jobs, bills, payments (PIN login) ===== */
+var JOBS=[],SUM={payout:0,payoutJobs:0,open:0},BILL={id:"",mode:""},busy=false,declArm="";
+function sess(){var h="";try{h=localStorage.getItem("mh_pa")||""}catch(e){}var m=/^t:(\d{10}):([a-f0-9]+)$/.exec(h);return m?{p:m[1],t:m[2]}:null}
+function qs(o){return Object.keys(o).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(o[k])}).join("&")}
+function api(o){return fetch(PROFILE_API+(PROFILE_API.indexOf("?")>-1?"&":"?")+qs(o),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json()})}
+function authLost(){logoutPA();JOBS=[];if(view===5)show(4)}
+function apiA(a,o){
+  var s=sess();if(!s){authLost();return Promise.reject("no")}
+  var q={a:a,p:s.p,t:s.t};for(var k in (o||{}))q[k]=o[k];
+  return api(q).then(function(j){
+    if(j&&j.auth===false){authLost();throw "no"}
+    if(j&&j.blocked){authLost();blk(j);throw "no"}
+    return j});
+}
+function applyMe(j){
+  if(!j||!j.ok)return false;
+  PROFILE=j.profile;JOBS=j.jobs||[];SUM=j.sum||SUM;
+  try{localStorage.setItem("mh_pf",JSON.stringify(PROFILE))}catch(e){}
+  renderPro();return true;
+}
+function errMsg(c){return T("er_"+c)||T("er_server")}
+function refreshMe(){if(!PROFILE_API||!sess())return Promise.resolve();return apiA("me").then(applyMe).catch(function(){})}
+function checkPA(){
+  var s=sess();
+  if(!s){try{if(localStorage.getItem("mh_pa"))logoutPA()}catch(e){}return}
+  PA=true;refreshMe();
+}
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&view===5)refreshMe()});
+function showLg(m){var e=document.getElementById("lg_msg");if(e){e.textContent=m;e.style.display="block"}}
+function lgFirst(){var x=document.getElementById("lg_fc");x.style.display=x.style.display==="none"?"block":"none"}
+function provLogin(){
+  var lm=document.getElementById("lg_msg");if(lm)lm.style.display="none";
+  var d=fv("pcode").replace(/\D/g,"").slice(-10),pin=fv("ppin").replace(/\D/g,""),cc=fv("pcc").replace(/\D/g,"");
+  if(d.length!==10||pin.length!==4){showLg(T("lg_bad2"));return}
+  if(!PROFILE_API){toast(T("lg_net"));return}
+  var q={a:"login",p:d,pin:pin};if(cc)q.c=cc;
+  api(q).then(function(j){
+    if(j&&j.ok){
+      try{localStorage.setItem("mh_pa","t:"+d+":"+j.token)}catch(e){}
+      PA=true;applyMe(j);document.getElementById("ppin").value="";document.getElementById("pcc").value="";show(5);
+    }else if(j&&j.blocked)blk(j);
+    else if(j&&j.needCode){showLg(T("lg_needCode"));document.getElementById("lg_fc").style.display="block"}
+    else if(j&&j.err==="locked")showLg(T("lg_lock"));
+    else showLg(T("lg_bad2"));
+  }).catch(function(){toast(T("lg_net"))});
+}
+function money(n){return"₹"+(Math.round(n)||0)}
+function jobOf(id){for(var i=0;i<JOBS.length;i++)if(JOBS[i].id===id)return JOBS[i];return null}
+function fmtJ(t){return t?fmtD(String(t).slice(0,10)):""}
+function jbStatus(j){return({Assigned:["jb_sAs","#c98a00"],Accepted:["jb_sAc","#c98a00"],Billed:["jb_sBi","#c98a00"],Completed:["jb_sCo","var(--wa)"],Declined:["jb_sDe","var(--mut)"]})[j.st]||["jb_sAc","var(--mut)"]}
+function jobCard(j){
+  var s=jbStatus(j),id=j.id;
+  var h='<div class="hc jb"><div class="jbh"><b>'+esc(j.svc||"")+'</b><span class="jbs" style="color:'+s[1]+'">'+T(s[0])+'</span></div>'
+   +'<small>📍 '+esc(j.area||"-")+' · '+esc(fmtJ(j.t))+'</small>'
+   +(j.cp?'<div style="margin-top:6px"><a href="tel:+91'+j.cp+'" style="color:var(--lk);font-weight:700">📞 '+esc(j.cn)+' · '+j.cp+'</a></div>':'')
+   +(j.det?'<small>'+esc(j.det)+'</small>':'');
+  if(j.amt)h+='<div class="pfrow"><span style="color:var(--mut)">'+T("jb_amt")+' · '+T(j.mode==="Online"?"jb_online":"jb_cash")+'</span><b>'+money(j.amt)+'</b></div>';
+  if(j.st==="Completed"&&j.mode==="Online")h+='<div class="pfrow"><span style="color:var(--mut)">'+T(j.ps==="Paid"?"jb_paidU":"jb_toRecv")+'</span><b>'+money(j.pay)+'</b></div>';
+  if(j.st==="Completed"&&j.mode==="Cash")h+='<div class="pfrow"><span style="color:var(--mut)">'+T("jb_com")+'</span><b>'+money(j.com)+'</b></div>'+(j.vf==="OK"?'<small style="color:var(--wa)">'+T("jb_vOK")+'</small>':j.vf==="Mismatch"?'<small style="color:#d93025">'+T("jb_vMis")+'</small>':'');
+  if(j.st==="Assigned")h+='<div class="jbb"><button class="go" style="background:var(--wa)" onclick="jobAct(\'accept\',\''+id+'\')">'+T("jb_acc")+'</button><button onclick="jobAct(\'decline\',\''+id+'\')" id="dc_'+id+'">'+T("jb_dec")+'</button></div>';
+  if(j.st==="Accepted")h+='<button class="go" onclick="openBill(\''+id+'\')">'+T("jb_mk")+'</button>';
+  if(j.st==="Billed")h+='<button class="go" style="background:var(--wa)" onclick="sendPayLink(\''+id+'\')">'+T("jb_sendP")+'</button><div class="jbb"><button onclick="copyLink(\''+id+'\')">'+T("jb_copy")+'</button><button onclick="chkPay(\''+id+'\')">'+T("jb_chk")+'</button></div>';
+  if(j.st==="Completed"){
+    if(j.rt)h+='<div class="pfrow"><span style="color:var(--mut)">'+T("jb_rate")+'</span><b>'+"★★★★★".slice(0,j.rt)+'</b></div>';
+    else if(j.rate)h+='<div class="jbb"><button onclick="sendRate(\''+id+'\')">'+T("jb_askR")+'</button></div>';
+  }
+  return h+'</div>';
+}
+function renderJobs(){
+  var e=document.getElementById("pa_jobx");if(!e)return;
+  if(!PROFILE_API||!PROFILE){e.innerHTML="";return}
+  var h='<div class="hc"><b>'+T("jb_T")+'</b><div class="jbsum"><div><b>'+(SUM.open||0)+'</b><span>'+T("jb_open")+'</span></div><div><b>'+money(SUM.payout)+'</b><span>'+T("jb_pay")+'</span></div><div><b>'+(PROFILE.ratings?"★ "+PROFILE.rating:"–")+'</b><span>'+T("jb_rate")+'</span></div></div>'
+   +'<button class="go" style="margin-top:12px" onclick="openBill(\'\')">＋ '+T("jb_new")+'</button></div>';
+  h+=JOBS.length?JOBS.map(jobCard).join(""):'<p class="msg">'+T("jb_none")+'</p>';
+  e.innerHTML=h;
+}
+function jobAct(a,id){
+  if(busy)return;
+  if(a==="decline"&&declArm!==id){declArm=id;var b=document.getElementById("dc_"+id);if(b)b.textContent=T("jb_dec2");setTimeout(function(){if(declArm===id){declArm="";var x=document.getElementById("dc_"+id);if(x)x.textContent=T("jb_dec")}},4000);return}
+  declArm="";busy=true;
+  apiA(a,{j:id}).then(function(j){busy=false;if(!applyMe(j))toast(errMsg(j&&j.err))}).catch(function(e){busy=false;if(e!=="no")toast(T("lg_net"))});
+}
+function openBill(id){
+  BILL={id:id,mode:""};var j=id?jobOf(id):null;
+  sheet(shHead(T("jb_bill"),false)
+   +(j?'<div class="rq"><b>'+esc(j.svc)+'</b><small>'+esc(j.cn)+' · '+esc(j.cp)+'</small></div>'
+      :'<label class="llb">'+T("rname")+'</label><input class="lin" id="b_cn" maxlength="60" autocomplete="off" style="width:100%;margin:6px 0 0"><label class="llb">'+T("rphone")+'</label><input class="lin" id="b_cp" type="tel" inputmode="numeric" maxlength="10" autocomplete="off" style="width:100%;margin:6px 0 0">')
+   +'<label class="llb">'+T("jb_amtL")+'</label><input class="lin" id="b_amt" type="tel" inputmode="numeric" maxlength="6" autocomplete="off" oninput="billSum()" style="width:100%;margin:6px 0 0">'
+   +'<label class="llb">'+T("jb_how")+'</label><div class="srow"><button id="bm_cash" onclick="billMode(\'cash\')">'+T("jb_cash")+'</button><button id="bm_online" onclick="billMode(\'online\')">'+T("jb_online")+'</button></div>'
+   +'<p class="bsum" id="b_sum"></p><button class="go" id="b_go" onclick="submitBill()">'+T("jb_submit")+'</button><p class="bnote">'+T("jb_final")+'</p><p class="bnote">'+T("jb_warn")+'</p>');
+}
+function billMode(m){BILL.mode=m;["cash","online"].forEach(function(k){var b=document.getElementById("bm_"+k);if(b)b.className=(k===m?"on":"")});billSum()}
+function billSum(){
+  var e=document.getElementById("b_sum");if(!e)return;
+  var a=parseInt((document.getElementById("b_amt").value||"").replace(/\D/g,""),10)||0,R=(PROFILE&&PROFILE.rules)||{pct:10,dueDays:3};
+  if(!a||!BILL.mode){e.textContent="";return}
+  var c=Math.round(a*R.pct/100);
+  e.textContent=T(BILL.mode==="cash"?"jb_sumC":"jb_sumO").replace("{a}",a).replace("{c}",c).replace("{p}",a-c).replace("{d}",R.dueDays);
+}
+function submitBill(){
+  if(busy)return;
+  var a=parseInt((fv("b_amt")||"").replace(/\D/g,""),10)||0,q={j:BILL.id,amt:a,mode:BILL.mode};
+  if(a<1||a>100000){toast(T("jb_eamt"));return}
+  if(!BILL.mode){toast(T("jb_emode"));return}
+  if(!BILL.id){q.cn=fv("b_cn");q.cp=fv("b_cp").replace(/\D/g,"").slice(-10);if(!q.cn||q.cp.length!==10){toast(T("er_cust"));return}}
+  busy=true;var b=document.getElementById("b_go");if(b){b.disabled=true;b.textContent=T("jb_wait")}
+  apiA("bill",q).then(function(j){
+    busy=false;
+    if(j&&j.ok){applyMe(j);showBilled(j.billed||BILL.id)}
+    else{if(b){b.disabled=false;b.textContent=T("jb_submit")}toast(errMsg(j&&j.err))}
+  }).catch(function(e){busy=false;if(b){b.disabled=false;b.textContent=T("jb_submit")}if(e!=="no")toast(T("lg_net"))});
+}
+function showBilled(id){
+  var j=jobOf(id);if(!j){closeMenu();return}
+  if(j.mode==="Online")
+    sheet('<div class="sh-h"><h4>✅ '+T("jb_linkT")+'</h4></div><p style="margin:0 0 6px;font-size:22px;font-weight:800">'+money(j.amt)+'</p><p style="margin:0 0 12px;color:var(--mut);font-size:14px;line-height:1.45">'+T("jb_linkS").replace("{p}",Math.round(j.pay))+'</p>'
+     +'<button class="go" style="background:var(--wa);margin-top:0" onclick="sendPayLink(\''+id+'\')">'+T("jb_sendP")+'</button>'
+     +'<div class="jbb"><button onclick="copyLink(\''+id+'\')">'+T("jb_copy")+'</button><button onclick="chkPay(\''+id+'\')">'+T("jb_chk")+'</button></div>'
+     +'<button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--line)" onclick="closeMenu()">'+T("jb_close")+'</button>');
+  else
+    sheet('<div class="sh-h"><h4>✅ '+T("jb_doneT")+'</h4></div><p style="margin:0 0 12px;color:var(--mut);font-size:14px;line-height:1.45">'+T("jb_doneC").replace("{c}",Math.round(j.com))+'</p>'
+     +(j.rate?'<button class="go" style="background:var(--wa);margin-top:0" onclick="sendRate(\''+id+'\')">'+T("jb_askR")+'</button>':'')
+     +'<button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--line)" onclick="closeMenu()">'+T("jb_close")+'</button>');
+}
+function waTo(cp,msg){window.open("https://wa.me/91"+cp+"?text="+encodeURIComponent(msg),"_blank")}
+function jobMsg(k,j,l){return T(k).replace("{n}",j.cn).replace("{a}",String(Math.round(j.amt))).replace("{s}",j.svc).replace("{p}",(PROFILE&&PROFILE.name)||"").replace("{l}",l)}
+function sendPayLink(id){var j=jobOf(id);if(j&&j.link)waTo(j.cp,jobMsg("jb_msgPay",j,j.link))}
+function sendRate(id){var j=jobOf(id);if(j&&j.rate)waTo(j.cp,jobMsg("jb_msgRate",j,j.rate))}
+function copyLink(id){var j=jobOf(id);if(!j||!j.link)return;if(navigator.clipboard)navigator.clipboard.writeText(j.link).then(function(){toast(T("jb_copied"))},function(){toast(j.link)});else toast(j.link)}
+function chkPay(id){
+  if(busy)return;busy=true;
+  apiA("check",{j:id}).then(function(j){busy=false;if(applyMe(j)){var x=jobOf(id);if(x&&x.st==="Completed"){toast(T("jb_paid"));closeMenu()}else toast(T("jb_notyet"))}else toast(errMsg(j&&j.err))}).catch(function(e){busy=false;if(e!=="no")toast(T("lg_net"))});
+}
 /* ===== Three-dot menu: My requests, Settings, policies, contact, share ===== */
-var APP_VER="12",clrArm=false;
+var APP_VER="14",clrArm=false;
 function sheet(h){var m=document.getElementById("msheet");m.innerHTML=h;document.getElementById("bg").style.display="block";m.style.display="block";m.scrollTop=0}
 function mrow(ic,tx,act){return'<button class="li" style="width:100%;margin:0 0 8px;background:var(--bg)" onclick="'+act+'"><em>'+ic+'</em><span>'+tx+'</span><u>›</u></button>'}
 function mlink(ic,tx,href){return'<a class="li" style="width:100%;margin:0 0 8px;background:var(--bg);color:inherit;text-decoration:none" href="'+href+'"><em>'+ic+'</em><span>'+tx+'</span><u>›</u></a>'}
@@ -537,7 +670,7 @@ function dbgDraw(){
   if(!e){e=document.createElement("div");e.id="dbgbox";e.style.cssText="position:fixed;left:6px;right:6px;top:6px;z-index:999;background:rgba(0,0,0,.88);color:#7CFC7C;font:11px/1.35 monospace;padding:8px;border-radius:8px;pointer-events:none;white-space:pre-wrap";document.body.appendChild(e)}
   e.style.display="block";
   var st="";try{st=JSON.stringify(history.state)}catch(x){}
-  e.textContent="v12 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
+  e.textContent="v14 len="+history.length+" state="+st+"\nview="+view+" guarded="+guarded+" fresh="+fresh+" pend="+pend+" armed="+armed+"\n"+DBG.join("\n");
 }
 function verTap(){var n=Date.now();verN=(n-verT<1500)?verN+1:1;verT=n;if(verN>=5){verN=0;dbgOn=!dbgOn;dbgDraw()}}
 /* ===== Back button =====
